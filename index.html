@@ -13,11 +13,11 @@
   --acc:#00e5a0;--acc2:#6c8fff;--acc3:#ff6b9d;--acc4:#ffd166;--acc5:#a78bfa;
   --txt:#e8eaf6;--txt2:#9ca3c0;--mut:#4a5070;
   --red:#ff5c7c;--green:#00e5a0;
+  --header-h:58px;--tabbar-h:56px;
 }
 html,body{height:100%;overflow:hidden}
 body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--txt);display:flex;flex-direction:column}
 
-/* ── GRID NOISE OVERLAY ── */
 body::before{
   content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
@@ -28,7 +28,7 @@ body::before{
 header{
   position:relative;z-index:10;
   background:var(--surf);border-bottom:1px solid var(--border);
-  padding:0 20px;height:58px;display:flex;align-items:center;gap:14px;flex-shrink:0;
+  padding:0 16px;height:var(--header-h);display:flex;align-items:center;gap:12px;flex-shrink:0;
 }
 .logo{
   width:40px;height:40px;background:var(--acc);border-radius:10px;
@@ -39,22 +39,41 @@ header{
 @keyframes logoP{0%,100%{box-shadow:0 0 0 0 rgba(0,229,160,.5)}50%{box-shadow:0 0 16px rgba(0,229,160,.25),0 0 0 6px rgba(0,229,160,0)}}
 .header-info h1{font-size:15px;font-weight:700;color:var(--txt)}
 .header-info p{font-size:10px;color:var(--mut);font-family:'JetBrains Mono',monospace}
-.header-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:8px}
 .vid-btn{
   background:linear-gradient(135deg,var(--acc3),#e055cc);
-  border:none;color:#fff;padding:8px 16px;border-radius:8px;
+  border:none;color:#fff;padding:8px 14px;border-radius:8px;
   font-family:'Syne',sans-serif;font-size:12px;font-weight:700;cursor:pointer;
   transition:opacity .2s,transform .2s;white-space:nowrap;
 }
 .vid-btn:hover{opacity:.85;transform:translateY(-1px)}
 
+/* Hamburger button — mobile only */
+.menu-btn{
+  display:none;background:var(--surf3);border:1px solid var(--border);
+  color:var(--txt2);width:38px;height:38px;border-radius:9px;cursor:pointer;
+  align-items:center;justify-content:center;font-size:18px;flex-shrink:0;
+  transition:background .2s,color .2s;
+}
+.menu-btn:hover{background:var(--surf2);color:var(--acc)}
+
 /* ── LAYOUT ── */
 .app-body{display:flex;flex:1;overflow:hidden;position:relative;z-index:1}
+
+/* ── DRAWER OVERLAY (mobile) ── */
+.drawer-overlay{
+  display:none;position:fixed;inset:0;background:rgba(8,10,16,.75);
+  z-index:40;backdrop-filter:blur(2px);
+  opacity:0;transition:opacity .25s;pointer-events:none;
+}
+.drawer-overlay.open{opacity:1;pointer-events:all}
 
 /* ── SIDEBAR ── */
 aside{
   width:210px;flex-shrink:0;background:var(--surf);
   border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;
+  transition:transform .28s cubic-bezier(.4,0,.2,1);
+  position:relative;z-index:41;
 }
 .sidebar-scroll{flex:1;overflow-y:auto;padding:8px 0 12px}
 .sidebar-scroll::-webkit-scrollbar{width:4px}
@@ -64,18 +83,18 @@ aside{
   color:var(--mut);padding:12px 14px 4px;letter-spacing:.08em;
 }
 .sb-btn{
-  display:flex;align-items:center;gap:8px;padding:7px 14px;cursor:pointer;
+  display:flex;align-items:center;gap:8px;padding:9px 14px;cursor:pointer;
   transition:background .15s;border:none;background:transparent;width:100%;text-align:left;
 }
-.sb-btn:hover{background:var(--surf3)}
+.sb-btn:hover,.sb-btn:active{background:var(--surf3)}
 .sb-btn:hover .sb-label{color:var(--acc)}
 .sb-icon{
   font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;
   width:22px;text-align:center;flex-shrink:0;
 }
-.sb-label{font-family:'Syne',sans-serif;font-size:12px;color:var(--txt);transition:color .15s}
+.sb-label{font-family:'Syne',sans-serif;font-size:13px;color:var(--txt);transition:color .15s}
 
-/* CALC */
+/* ── CALCULATOR ── */
 .sb-calc{padding:10px;border-top:1px solid var(--border);flex-shrink:0}
 .calc-label{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;color:var(--mut);padding:0 4px 6px;letter-spacing:.08em}
 .calc-inner{background:var(--surf2);border:1px solid var(--border);border-radius:10px;padding:10px;gap:6px;display:flex;flex-direction:column}
@@ -92,7 +111,7 @@ aside{
 .calc-field input{
   background:var(--bg);border:1px solid var(--border);color:var(--txt);
   font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;
-  text-align:center;border-radius:6px;padding:5px 4px;width:100%;outline:none;
+  text-align:center;border-radius:6px;padding:6px 4px;width:100%;outline:none;
   transition:border-color .2s;
 }
 .calc-field input:focus{border-color:var(--acc)}
@@ -100,7 +119,7 @@ aside{
 .calc-run{
   background:var(--acc);color:#080a10;border:none;border-radius:6px;
   font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;
-  padding:7px;cursor:pointer;transition:opacity .2s;width:100%;
+  padding:8px;cursor:pointer;transition:opacity .2s;width:100%;
 }
 .calc-run:hover{opacity:.85}
 .calc-result{
@@ -111,18 +130,17 @@ aside{
 
 /* ── CHAT ── */
 .chat-area{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
-.messages{flex:1;overflow-y:auto;padding:20px 20px 8px;display:flex;flex-direction:column;gap:16px}
+.messages{flex:1;overflow-y:auto;padding:16px 16px 8px;display:flex;flex-direction:column;gap:14px}
 .messages::-webkit-scrollbar{width:5px}
 .messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 
-/* message bubbles */
 .msg{display:flex;flex-direction:column;gap:4px;animation:msgIn .25s ease-out}
 @keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .msg-name{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:0 2px}
 .msg.bot .msg-name{color:var(--acc)}
 .msg.user .msg-name{color:var(--acc3);text-align:right}
 .msg-bubble{
-  max-width:78%;padding:12px 16px;border-radius:14px;
+  max-width:82%;padding:11px 14px;border-radius:14px;
   font-size:13.5px;line-height:1.65;white-space:pre-wrap;word-break:break-word;
   font-family:'Syne',sans-serif;
 }
@@ -136,16 +154,7 @@ aside{
   border:1px solid var(--acc2);border-top-right-radius:4px;
   color:var(--txt);
 }
-/* code-style in bot messages */
-.msg.bot .msg-bubble .formula{
-  font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;
-  color:var(--acc);display:block;margin:6px 0;
-}
-.msg.bot .msg-bubble .highlight{color:var(--acc4);font-weight:700}
-.msg.bot .msg-bubble .ok{color:var(--green)}
-.msg.bot .msg-bubble .err-txt{color:var(--red)}
 
-/* typing indicator */
 .typing{display:flex;gap:5px;padding:14px 16px;align-items:center}
 .typing span{
   width:7px;height:7px;background:var(--mut);border-radius:50%;
@@ -157,8 +166,8 @@ aside{
 
 /* input bar */
 .input-bar{
-  padding:12px 16px;background:var(--surf);border-top:1px solid var(--border);
-  display:flex;gap:10px;align-items:center;flex-shrink:0;
+  padding:10px 12px;background:var(--surf);border-top:1px solid var(--border);
+  display:flex;gap:8px;align-items:center;flex-shrink:0;
 }
 .input-bar input{
   flex:1;background:var(--surf2);border:1px solid var(--border);color:var(--txt);
@@ -170,15 +179,77 @@ aside{
 .send-btn{
   background:var(--acc);color:#080a10;border:none;border-radius:10px;
   font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;
-  padding:10px 18px;cursor:pointer;white-space:nowrap;transition:opacity .2s,transform .15s;flex-shrink:0;
+  padding:10px 16px;cursor:pointer;white-space:nowrap;transition:opacity .2s,transform .15s;flex-shrink:0;
 }
 .send-btn:hover{opacity:.85;transform:translateY(-1px)}
 .send-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
 
-/* ── VIDEO MODAL ── */
+/* ── BOTTOM TAB BAR (mobile only) ── */
+.tab-bar{
+  display:none;position:relative;z-index:10;
+  background:var(--surf);border-top:1px solid var(--border);
+  height:var(--tabbar-h);flex-shrink:0;
+  grid-template-columns:repeat(4,1fr);
+  align-items:stretch;
+}
+.tab-item{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;background:transparent;border:none;cursor:pointer;
+  padding:6px 4px;transition:background .15s;color:var(--txt2);
+  font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.05em;
+}
+.tab-item:active{background:var(--surf3)}
+.tab-item.active{color:var(--acc)}
+.tab-item .tab-icon{font-size:18px;line-height:1}
+
+/* ── MOBILE PANELS ── */
+/* Topics panel */
+.mobile-panel{
+  display:none;position:fixed;left:0;right:0;bottom:var(--tabbar-h);
+  background:var(--surf);border-top:2px solid var(--border);
+  z-index:30;max-height:65vh;overflow-y:auto;
+  transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
+  border-radius:18px 18px 0 0;
+}
+.mobile-panel.open{transform:translateY(0)}
+
+.panel-header{
+  position:sticky;top:0;background:var(--surf);z-index:1;
+  padding:12px 16px 8px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.panel-header h3{font-size:13px;font-weight:700;color:var(--acc);font-family:'JetBrains Mono',monospace}
+.panel-close{background:var(--surf3);border:1px solid var(--border);color:var(--txt2);
+  width:28px;height:28px;border-radius:7px;cursor:pointer;font-size:14px;
+  display:flex;align-items:center;justify-content:center;}
+
+.panel-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;padding:6px 0 20px}
+.panel-btn{
+  display:flex;align-items:center;gap:10px;padding:10px 16px;
+  background:transparent;border:none;border-bottom:1px solid var(--border);
+  color:var(--txt);cursor:pointer;text-align:left;transition:background .15s;
+}
+.panel-btn:active{background:var(--surf3)}
+.panel-btn:nth-child(odd){border-right:1px solid var(--border)}
+.panel-btn .pb-icon{font-size:15px;flex-shrink:0}
+.panel-btn .pb-label{font-family:'Syne',sans-serif;font-size:12px;line-height:1.3;color:var(--txt2)}
+
+/* Calculator panel */
+.calc-panel{
+  display:none;position:fixed;left:0;right:0;bottom:var(--tabbar-h);
+  background:var(--surf);border-top:2px solid var(--border);
+  z-index:30;
+  transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
+  border-radius:18px 18px 0 0;padding-bottom:env(safe-area-inset-bottom,0);
+}
+.calc-panel.open{transform:translateY(0)}
+.calc-panel-inner{padding:16px 16px 24px}
+.calc-panel-inner .calc-inner{max-width:400px;margin:0 auto}
+
+/* ── MODAL ── */
 .modal-bg{
   position:fixed;inset:0;background:rgba(8,10,16,.92);z-index:100;
-  display:none;align-items:center;justify-content:center;padding:20px;
+  display:none;align-items:center;justify-content:center;padding:16px;
 }
 .modal-bg.open{display:flex}
 .modal{
@@ -186,64 +257,81 @@ aside{
   max-width:860px;width:100%;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;
 }
 .modal-header{
-  padding:16px 20px;border-bottom:1px solid var(--border);
+  padding:14px 18px;border-bottom:1px solid var(--border);
   display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
 }
-.modal-header h2{font-size:15px;font-weight:700;color:var(--txt)}
+.modal-header h2{font-size:14px;font-weight:700;color:var(--txt)}
 .modal-close{background:var(--surf3);border:1px solid var(--border);color:var(--txt2);
   font-size:18px;width:32px;height:32px;border-radius:8px;cursor:pointer;
   display:flex;align-items:center;justify-content:center;transition:background .2s}
 .modal-close:hover{background:var(--surf2);color:var(--txt)}
-.modal-body{overflow-y:auto;padding:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.modal-body{overflow-y:auto;padding:16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
 .modal-body::-webkit-scrollbar{width:5px}
 .modal-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 
-/* video cards */
 .vid-card{
   background:var(--surf2);border:1px solid var(--border);border-radius:14px;overflow:hidden;
   transition:transform .25s,border-color .25s,box-shadow .25s;
   animation:cardIn .4s cubic-bezier(.34,1.56,.64,1) both;
 }
-.vid-card:nth-child(1){animation-delay:.05s}
-.vid-card:nth-child(2){animation-delay:.10s}
-.vid-card:nth-child(3){animation-delay:.15s}
-.vid-card:nth-child(4){animation-delay:.20s}
+.vid-card:nth-child(1){animation-delay:.05s}.vid-card:nth-child(2){animation-delay:.10s}
+.vid-card:nth-child(3){animation-delay:.15s}.vid-card:nth-child(4){animation-delay:.20s}
 .vid-card:nth-child(5){animation-delay:.25s}
 @keyframes cardIn{from{opacity:0;transform:translateY(20px) scale(.95)}to{opacity:1;transform:none}}
 .vid-card:hover{transform:translateY(-5px);border-color:var(--acc);box-shadow:0 12px 40px rgba(0,229,160,.12)}
-.vid-meta{padding:12px 14px 0}
-.vid-tag{
-  display:inline-block;padding:2px 10px;border-radius:20px;
-  font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;margin-bottom:6px;
-}
-.vid-meta h3{font-size:12px;font-weight:700;line-height:1.4;margin-bottom:4px;color:var(--txt)}
+.vid-meta{padding:10px 12px 0}
+.vid-tag{display:inline-block;padding:2px 10px;border-radius:20px;
+  font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;margin-bottom:5px}
+.vid-meta h3{font-size:12px;font-weight:700;line-height:1.4;margin-bottom:3px;color:var(--txt)}
 .vid-meta p{font-size:11px;color:var(--txt2);line-height:1.4;margin-bottom:10px}
-.vid-thumb{
-  display:block;position:relative;padding-top:56.25%;
-  background:var(--surf3);overflow:hidden;text-decoration:none;
-}
-.vid-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-  transition:transform .3s,filter .3s;filter:brightness(.8)}
+.vid-thumb{display:block;position:relative;padding-top:56.25%;background:var(--surf3);overflow:hidden;text-decoration:none}
+.vid-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .3s,filter .3s;filter:brightness(.8)}
 .vid-card:hover .vid-thumb img{transform:scale(1.04);filter:brightness(1)}
-.yt-btn{
-  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(1);
-  transition:transform .2s;pointer-events:none;filter:drop-shadow(0 4px 12px rgba(0,0,0,.6));
-}
+.yt-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(1);transition:transform .2s;pointer-events:none;filter:drop-shadow(0 4px 12px rgba(0,0,0,.6))}
 .vid-card:hover .yt-btn{transform:translate(-50%,-50%) scale(1.12)}
-.vid-open{
-  position:absolute;bottom:8px;right:10px;background:rgba(0,0,0,.7);
+.vid-open{position:absolute;bottom:8px;right:10px;background:rgba(0,0,0,.7);
   color:#fff;font-family:'JetBrains Mono',monospace;font-size:9px;
-  padding:3px 8px;border-radius:5px;opacity:0;transition:opacity .2s;pointer-events:none;
-}
+  padding:3px 8px;border-radius:5px;opacity:0;transition:opacity .2s;pointer-events:none}
 .vid-card:hover .vid-open{opacity:1}
 
-/* responsive */
+/* ── RESPONSIVE ── */
 @media(max-width:700px){
-  aside{display:none}
+  /* show hamburger + hide desktop sidebar */
+  .menu-btn{display:flex}
+  aside{
+    display:flex;
+    position:fixed;top:0;left:0;bottom:0;width:270px;
+    transform:translateX(-100%);z-index:45;
+    box-shadow:6px 0 30px rgba(0,0,0,.5);
+  }
+  aside.open{transform:translateX(0)}
+  .drawer-overlay{display:block}
+
+  /* bottom tab bar */
+  .tab-bar{display:grid}
+
+  /* input bar smaller */
+  .input-bar{padding:8px 10px}
+  .input-bar input{font-size:14px;padding:9px 12px}
+  .send-btn{padding:9px 12px;font-size:11px}
+
+  /* bigger touch targets */
+  .sb-btn{padding:11px 14px}
+
+  /* messages padding */
+  .messages{padding:12px 12px 6px}
+  .msg-bubble{font-size:13px;padding:10px 13px;max-width:90%}
+
+  /* vid btn text hidden on very small */
+  .vid-btn span{display:none}
+  .vid-btn{padding:8px 10px;font-size:13px}
+
   .modal-body{grid-template-columns:1fr}
 }
-@media(max-width:500px){
-  .vid-btn span{display:none}
+
+@media(max-width:380px){
+  .header-info p{display:none}
+  .vid-btn{display:none}
 }
 </style>
 </head>
@@ -251,21 +339,24 @@ aside{
 
 <!-- HEADER -->
 <header>
+  <button class="menu-btn" id="menuBtn" onclick="toggleDrawer()" aria-label="Menu">☰</button>
   <div class="logo">∑</div>
   <div class="header-info">
     <h1>ÁlgebraBot</h1>
-    <p>Análise Combinatória · 2º Ano Técnico</p>
+    <p>Análise Combinatória · 2º Ano</p>
   </div>
   <div class="header-right">
     <button class="vid-btn" onclick="openModal()">🎬 <span>Videoaulas</span></button>
   </div>
 </header>
 
-<!-- APP BODY -->
+<!-- Drawer overlay (mobile) -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+
 <div class="app-body">
 
-  <!-- SIDEBAR -->
-  <aside>
+  <!-- SIDEBAR (desktop + mobile drawer) -->
+  <aside id="sidebar">
     <div class="sidebar-scroll">
       <div class="sec-label">TÓPICOS</div>
       <button class="sb-btn" onclick="send('Explique PFC')">
@@ -348,7 +439,7 @@ aside{
       </button>
     </div>
 
-    <!-- CALCULATOR -->
+    <!-- CALCULADORA (sidebar) -->
     <div class="sb-calc">
       <div class="calc-label">CALCULADORA</div>
       <div class="calc-inner">
@@ -363,11 +454,11 @@ aside{
         <div class="calc-row">
           <div class="calc-field">
             <label>n</label>
-            <input type="number" id="calcN" min="0" placeholder="0">
+            <input type="number" id="calcN" min="0" placeholder="0" inputmode="numeric">
           </div>
           <div class="calc-field" id="pField">
             <label>p</label>
-            <input type="number" id="calcP" min="0" placeholder="0">
+            <input type="number" id="calcP" min="0" placeholder="0" inputmode="numeric">
           </div>
         </div>
         <button class="calc-run" onclick="runCalc()">= Calcular</button>
@@ -376,12 +467,142 @@ aside{
     </div>
   </aside>
 
-  <!-- CHAT -->
+  <!-- CHAT AREA -->
   <div class="chat-area">
     <div class="messages" id="messages"></div>
     <div class="input-bar">
       <input type="text" id="chatInput" placeholder="Pergunte sobre Análise Combinatória…" autocomplete="off" onkeydown="if(event.key==='Enter')sendMsg()">
       <button class="send-btn" id="sendBtn" onclick="sendMsg()">Enviar ➤</button>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM TAB BAR (mobile only) -->
+<nav class="tab-bar" id="tabBar">
+  <button class="tab-item active" id="tab-chat" onclick="showTab('chat')">
+    <span class="tab-icon">💬</span>
+    Chat
+  </button>
+  <button class="tab-item" id="tab-topics" onclick="showTab('topics')">
+    <span class="tab-icon">📖</span>
+    Tópicos
+  </button>
+  <button class="tab-item" id="tab-calc" onclick="showTab('calc')">
+    <span class="tab-icon">🧮</span>
+    Calc
+  </button>
+  <button class="tab-item" id="tab-videos" onclick="openModal();setActiveTab('videos')">
+    <span class="tab-icon">🎬</span>
+    Vídeos
+  </button>
+</nav>
+
+<!-- MOBILE TOPICS PANEL -->
+<div class="mobile-panel" id="topicsPanel">
+  <div class="panel-header">
+    <h3>TÓPICOS & AÇÕES</h3>
+    <button class="panel-close" onclick="closePanel('topics')">✕</button>
+  </div>
+  <div class="panel-grid">
+    <button class="panel-btn" onclick="sendPanel('Explique PFC')">
+      <span class="pb-icon" style="color:var(--acc)">×</span>
+      <span class="pb-label">PFC</span>
+    </button>
+    <button class="panel-btn" onclick="sendPanel('Explique arranjo')">
+      <span class="pb-icon" style="color:var(--acc2)">A</span>
+      <span class="pb-label">Arranjo Simples</span>
+    </button>
+    <button class="panel-btn" onclick="sendPanel('Explique combinação')">
+      <span class="pb-icon" style="color:var(--acc4)">C</span>
+      <span class="pb-label">Combinação</span>
+    </button>
+    <button class="panel-btn" onclick="sendPanel('Explique permutação')">
+      <span class="pb-icon" style="color:var(--acc3)">P</span>
+      <span class="pb-label">Permutação</span>
+    </button>
+    <button class="panel-btn" onclick="sendPanel('Explique arranjo com repetição')">
+      <span class="pb-icon" style="color:var(--acc5)">Aᵣ</span>
+      <span class="pb-label">Arr. c/ Rep.</span>
+    </button>
+    <button class="panel-btn" onclick="sendPanel('Explique permutação com repetição')">
+      <span class="pb-icon" style="color:#34d399">Pᵣ</span>
+      <span class="pb-label">Perm. c/ Rep.</span>
+    </button>
+    <button class="panel-btn" onclick="sendPanel('nova questão')">
+      <span class="pb-icon">📝</span>
+      <span class="pb-label">Nova Questão</span>
+    </button>
+    <button class="panel-btn" onclick="sendPanel('gabarito')">
+      <span class="pb-icon">✅</span>
+      <span class="pb-label">Ver Gabarito</span>
+    </button>
+    <button class="panel-btn" onclick="sendPanel('qual a diferença entre arranjo e combinação')">
+      <span class="pb-icon">⚖️</span>
+      <span class="pb-label">Arranjo vs Comb.</span>
+    </button>
+    <button class="panel-btn" onclick="sendPanel('qual a diferença entre permutação e arranjo')">
+      <span class="pb-icon">⚖️</span>
+      <span class="pb-label">Perm. vs Arranjo</span>
+    </button>
+    <button class="panel-btn" onclick="sendPanel('quando usar permutacao')">
+      <span class="pb-icon">?</span>
+      <span class="pb-label">Quando Perm.</span>
+    </button>
+    <button class="panel-btn" onclick="sendPanel('quando usar combinacao')">
+      <span class="pb-icon">?</span>
+      <span class="pb-label">Quando Comb.</span>
+    </button>
+    <button class="panel-btn" onclick="sendPanel('o que e fatorial')">
+      <span class="pb-icon">!</span>
+      <span class="pb-label">O que é Fatorial</span>
+    </button>
+    <button class="panel-btn" onclick="sendPanel('o que e diagonal')">
+      <span class="pb-icon">📐</span>
+      <span class="pb-label">Diagonais</span>
+    </button>
+    <button class="panel-btn" onclick="sendPanel('mais exemplos')">
+      <span class="pb-icon">📚</span>
+      <span class="pb-label">Mais exemplos</span>
+    </button>
+    <button class="panel-btn" onclick="sendPanel('ajuda')">
+      <span class="pb-icon">❓</span>
+      <span class="pb-label">Ajuda</span>
+    </button>
+    <button class="panel-btn" onclick="clearChat();closePanel('topics')">
+      <span class="pb-icon">🧹</span>
+      <span class="pb-label">Limpar chat</span>
+    </button>
+  </div>
+</div>
+
+<!-- MOBILE CALCULATOR PANEL -->
+<div class="calc-panel" id="calcPanel">
+  <div class="panel-header">
+    <h3>CALCULADORA</h3>
+    <button class="panel-close" onclick="closePanel('calc')">✕</button>
+  </div>
+  <div class="calc-panel-inner">
+    <div class="calc-inner">
+      <select class="calc-select" id="calcOpM" onchange="toggleCalcM()">
+        <option>Arranjo</option>
+        <option>Combinação</option>
+        <option>Permutação</option>
+        <option>Arr.Rep</option>
+        <option>Comb.Rep</option>
+        <option>Fatorial</option>
+      </select>
+      <div class="calc-row">
+        <div class="calc-field">
+          <label>n</label>
+          <input type="number" id="calcNM" min="0" placeholder="0" inputmode="numeric">
+        </div>
+        <div class="calc-field" id="pFieldM">
+          <label>p</label>
+          <input type="number" id="calcPM" min="0" placeholder="0" inputmode="numeric">
+        </div>
+      </div>
+      <button class="calc-run" onclick="runCalcM()">= Calcular</button>
+      <div class="calc-result" id="calcResM"></div>
     </div>
   </div>
 </div>
@@ -398,22 +619,17 @@ aside{
 </div>
 
 <script>
-// ─── MATH ─────────────────────────────────────────────────────────────────────
+// ── MATH ──────────────────────────────────────────────────
 function fat(n){if(n<0)return 0;let r=1n;for(let i=2n;i<=BigInt(n);i++)r*=i;return Number(r)}
 function arj(n,p){if(n<p||p<0)return 0;return fat(n)/fat(n-p)}
 function cmb(n,p){if(n<p||p<0)return 0;return fat(n)/(fat(p)*fat(n-p))}
 function permRep(n,...gs){let d=1;for(const g of gs)d*=fat(g);return fat(n)/d}
 function arrRep(n,p){return Math.pow(n,p)}
 function cmbRep(n,p){return cmb(n+p-1,p)}
-function fmt(n){
-  const s=Math.round(n).toString();
-  return s.replace(/\B(?=(\d{3})+(?!\d))/g,'.');
-}
-function norm(s){
-  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-}
+function fmt(n){const s=Math.round(n).toString();return s.replace(/\B(?=(\d{3})+(?!\d))/g,'.')}
+function norm(s){return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
 
-// ─── VIDEOS ───────────────────────────────────────────────────────────────────
+// ── VIDEOS ────────────────────────────────────────────────
 const VIDEOS=[
   {id:'a0GcRAWcoUY',titulo:'Princípio Fundamental da Contagem',topico:'PFC',cor:'#00e5a0',desc:'Aprenda o PFC — base de toda a Análise Combinatória.'},
   {id:'m_1RxAZutR4',titulo:'Permutação Simples e com Repetição',topico:'Permutação',cor:'#ff6b9d',desc:'Anagramas de palavras com letras iguais ou distintas.'},
@@ -434,7 +650,7 @@ function buildModal(){
       <a class="vid-thumb" href="https://www.youtube.com/watch?v=${v.id}" target="_blank" rel="noopener">
         <img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="${v.titulo}" loading="lazy" onerror="this.style.display='none'">
         <div class="yt-btn">
-          <svg viewBox="0 0 68 48" width="60" height="42">
+          <svg viewBox="0 0 68 48" width="56" height="40">
             <path d="M66.52 7.74C65.7 4.65 63.35 2.3 60.26 1.48C54.96 0 34 0 34 0S13.04 0 7.74 1.48C4.65 2.3 2.3 4.65 1.48 7.74C0 13.04 0 24 0 24s0 10.96 1.48 16.26c.82 3.09 3.17 5.44 6.26 6.26C13.04 48 34 48 34 48s20.96 0 26.26-1.48c3.09-.82 5.44-3.17 6.26-6.26C68 34.96 68 24 68 24S68 13.04 66.52 7.74z" fill="#ff0000"/>
             <path d="M45 24L27 14v20" fill="white"/>
           </svg>
@@ -445,10 +661,66 @@ function buildModal(){
 }
 
 function openModal(){buildModal();document.getElementById('modalBg').classList.add('open')}
-function closeModal(){document.getElementById('modalBg').classList.remove('open')}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+function closeModal(){document.getElementById('modalBg').classList.remove('open');setActiveTab('chat')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeAllPanels()}});
 
-// ─── KNOWLEDGE BASE ───────────────────────────────────────────────────────────
+// ── MOBILE DRAWER ─────────────────────────────────────────
+function toggleDrawer(){
+  const s=document.getElementById('sidebar');
+  const o=document.getElementById('drawerOverlay');
+  s.classList.toggle('open');
+  o.classList.toggle('open');
+}
+function closeDrawer(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('drawerOverlay').classList.remove('open');
+}
+
+// ── BOTTOM TABS ───────────────────────────────────────────
+function setActiveTab(name){
+  document.querySelectorAll('.tab-item').forEach(t=>t.classList.remove('active'));
+  const el=document.getElementById('tab-'+name);
+  if(el)el.classList.add('active');
+}
+
+function closeAllPanels(){
+  document.getElementById('topicsPanel').classList.remove('open');
+  document.getElementById('calcPanel').classList.remove('open');
+}
+
+function showTab(name){
+  const topicsPanel=document.getElementById('topicsPanel');
+  const calcPanel=document.getElementById('calcPanel');
+  if(name==='chat'){
+    closeAllPanels();
+    setActiveTab('chat');
+  }else if(name==='topics'){
+    const isOpen=topicsPanel.classList.contains('open');
+    closeAllPanels();
+    if(!isOpen){topicsPanel.classList.add('open');setActiveTab('topics');}
+    else setActiveTab('chat');
+  }else if(name==='calc'){
+    const isOpen=calcPanel.classList.contains('open');
+    closeAllPanels();
+    if(!isOpen){calcPanel.classList.add('open');setActiveTab('calc');}
+    else setActiveTab('chat');
+  }
+}
+
+function closePanel(name){
+  if(name==='topics')document.getElementById('topicsPanel').classList.remove('open');
+  if(name==='calc')document.getElementById('calcPanel').classList.remove('open');
+  setActiveTab('chat');
+}
+
+// Send from mobile panel (auto-closes panel)
+function sendPanel(txt){
+  closeAllPanels();
+  setActiveTab('chat');
+  send(txt);
+}
+
+// ── KNOWLEDGE BASE ────────────────────────────────────────
 const TOPICOS={
   pfc:{titulo:'Princípio Fundamental da Contagem',emoji:'×',cor:'#00e5a0',
     resumo:'Multiplica as opções de cada etapa independente.',
@@ -530,14 +802,14 @@ const TOPICOS={
 
 const CONCEITOS={
   'diferenca arranjo combinacao':
-    '⚖️  Arranjo vs Combinação\n\nA diferença fundamental é: A ORDEM IMPORTA?\n\n' +
-    '📌 ARRANJO — ordem IMPORTA\n   Ex: Presidente e Vice de 5 candidatos\n   (A→B) ≠ (B→A) → A(5,2) = 20 pares\n\n' +
-    '📌 COMBINAÇÃO — ordem NÃO importa\n   Ex: Equipe de 2 de 5 pessoas\n   {A,B} = {B,A} → C(5,2) = 10 equipes\n\n' +
+    '⚖️  Arranjo vs Combinação\n\nA diferença fundamental é: A ORDEM IMPORTA?\n\n'+
+    '📌 ARRANJO — ordem IMPORTA\n   Ex: Presidente e Vice de 5 candidatos\n   (A→B) ≠ (B→A) → A(5,2) = 20 pares\n\n'+
+    '📌 COMBINAÇÃO — ordem NÃO importa\n   Ex: Equipe de 2 de 5 pessoas\n   {A,B} = {B,A} → C(5,2) = 10 equipes\n\n'+
     '💡 cargos / pódio / senha → Arranjo\n   grupo / equipe / comissão → Combinação',
   'diferenca permutacao arranjo':
-    '⚖️  Permutação vs Arranjo\n\n' +
-    '📌 PERMUTAÇÃO — usa TODOS os elementos\n   P(n) = n!\n   Ex: 4 livros → P(4) = 24\n\n' +
-    '📌 ARRANJO — usa PARTE dos elementos\n   A(n,p) = n!/(n-p)!\n   Ex: 3 cargos de 10 → A(10,3) = 720\n\n' +
+    '⚖️  Permutação vs Arranjo\n\n'+
+    '📌 PERMUTAÇÃO — usa TODOS os elementos\n   P(n) = n!\n   Ex: 4 livros → P(4) = 24\n\n'+
+    '📌 ARRANJO — usa PARTE dos elementos\n   A(n,p) = n!/(n-p)!\n   Ex: 3 cargos de 10 → A(10,3) = 720\n\n'+
     '💡 todos → Permutação · parte → Arranjo',
   'quando usar permutacao':
     '📖  Quando usar Permutação?\n\n✔ Usa TODOS os elementos\n✔ A ORDEM importa\n✔ Sem repetição\n\nExemplos: anagramas, fila, prateleira\nFórmula: P(n) = n!',
@@ -569,10 +841,8 @@ const QUESTOES=[
   {q:'9 pessoas num grupo. Quantos apertos de mão ao todo?',r:cmb(9,2),res:'Par sem ordem → C(9,2) = 36 apertos de mão.'},
 ];
 
-// ─── STATE ────────────────────────────────────────────────────────────────────
 let estado={questao:null,tema:null};
 
-// ─── LOGIC ────────────────────────────────────────────────────────────────────
 function anagramaResp(palavra){
   const p=palavra.toUpperCase();
   const freq={};
@@ -581,9 +851,7 @@ function anagramaResp(palavra){
   const gs=Object.values(freq);
   const r=permRep(n,...gs);
   const reps=Object.entries(freq).filter(([,v])=>v>1);
-  if(!reps.length){
-    return `✦ Anagramas de ${p}\n  Letras todas distintas → Permutação Simples\n  P(${n}) = ${n}! = ${fmt(fat(n))} anagramas`;
-  }
+  if(!reps.length)return `✦ Anagramas de ${p}\n  Letras todas distintas → Permutação Simples\n  P(${n}) = ${n}! = ${fmt(fat(n))} anagramas`;
   const fstr=Object.entries(freq).map(([k,v])=>`${k}×${v}`).join(', ');
   const den=gs.map(v=>`${v}!`).join(' × ');
   return `✦ Anagramas de ${p}\n  Letras: ${fstr}\n  Repetições → Permutação com Repetição\n  PR = ${n}!/(${den})\n  PR = ${fmt(r)} anagramas`;
@@ -602,32 +870,19 @@ function respTopico(k){
 
 function localResp(q){
   const p=norm(q);
-  const nums=q.match(/\d+/g)?.map(Number)||[];
-
   for(const[chave,resp]of Object.entries(CONCEITOS)){
     if(chave.split(' ').every(w=>p.includes(w)))return resp;
   }
-
   let m=q.match(/(\d+)\s*!/);
   if(m){const n=parseInt(m[1]);return `✦ Fatorial\n  ${n}! = ${fmt(fat(n))}`;}
-
   m=q.match(/anagrama[s]?\s+(?:d[aeo]\s+)?(?:palavra\s+)?([A-Za-zÁÉÍÓÚÂÊÎÔÛÃÕÇáéíóúâêîôûãõç]{3,})/i);
   if(m)return anagramaResp(m[1]);
-
-  // diagonal
   m=q.match(/(\d+)\s*lado/);
   if(!m)m=q.match(/poligono\s+(?:de\s+)?(\d+)/i);
   if(m&&p.includes('diagonal'))return resolverDiagonal(parseInt(m[1]));
-
-  // aperto de mão
   m=q.match(/(\d+)\s*pessoa[s]?.*?(?:aperto|cumprimenta|handshake)/i);
   if(!m)m=q.match(/(?:aperto|cumprimenta|handshake).*?(\d+)\s*pessoa[s]?/i);
-  if(m){
-    const n=parseInt(m[1]);
-    return `✦ Apertos de mão entre ${n} pessoas\n  Par sem ordem → Combinação\n  C(${n},2) = ${fmt(cmb(n,2))} apertos de mão`;
-  }
-
-  // fórmulas diretas
+  if(m){const n=parseInt(m[1]);return `✦ Apertos de mão entre ${n} pessoas\n  Par sem ordem → Combinação\n  C(${n},2) = ${fmt(cmb(n,2))} apertos de mão`;}
   const pats=[
     [/\bA\((\d+)\s*,\s*(\d+)\)/i,(a,b)=>`Arranjo A(${a},${b}) = ${fmt(arj(a,b))}`],
     [/\bC\((\d+)\s*,\s*(\d+)\)/i,(a,b)=>`Combinação C(${a},${b}) = ${fmt(cmb(a,b))}`],
@@ -639,30 +894,26 @@ function localResp(q){
     m=q.match(pat);
     if(m){const gs=m.slice(1).map(Number);return '✦ '+fn(...gs);}
   }
-
   for(const[k,d]of Object.entries(TOPICOS)){
     if(d.sins.some(s=>p.includes(norm(s))))return respTopico(k);
   }
-
+  const nums=q.match(/\d+/g)?.map(Number)||[];
   if(nums.length>=2){
     const[n,p2]=[nums[0],nums[1]];
     const pwords=['podio','ouro','prata','bronze','cargo','presidente','vice','secretario'];
     const swords=['senha','codigo','pin','placa'];
     const gwords=['equipe','time','grupo','comissao'];
-    if(pwords.some(w=>p.includes(w))&&n>p2)
-      return `✦ Arranjo Simples — Cargos/Pódio\n  Ordem importa → A(${n},${p2})\n  A(${n},${p2}) = ${fmt(arj(n,p2))}`;
+    if(pwords.some(w=>p.includes(w))&&n>p2)return `✦ Arranjo Simples — Cargos/Pódio\n  Ordem importa → A(${n},${p2})\n  A(${n},${p2}) = ${fmt(arj(n,p2))}`;
     if(swords.some(w=>p.includes(w))){
-      if(p.includes('repeticao')||p.includes('repetir'))
-        return `✦ Arranjo com Repetição — Senha\n  AR(${n},${p2}) = ${n}^${p2} = ${fmt(arrRep(n,p2))}`;
+      if(p.includes('repeticao')||p.includes('repetir'))return `✦ Arranjo com Repetição — Senha\n  AR(${n},${p2}) = ${n}^${p2} = ${fmt(arrRep(n,p2))}`;
       return `✦ Arranjo Simples — Senha\n  A(${n},${p2}) = ${fmt(arj(n,p2))}`;
     }
-    if(gwords.some(w=>p.includes(w))&&n>p2)
-      return `✦ Combinação Simples — Grupo\n  C(${n},${p2}) = ${fmt(cmb(n,p2))}`;
+    if(gwords.some(w=>p.includes(w))&&n>p2)return `✦ Combinação Simples — Grupo\n  C(${n},${p2}) = ${fmt(cmb(n,p2))}`;
   }
   return null;
 }
 
-// ─── CHAT UI ──────────────────────────────────────────────────────────────────
+// ── CHAT ──────────────────────────────────────────────────
 function addMsg(text,type){
   const wrap=document.getElementById('messages');
   const div=document.createElement('div');
@@ -673,9 +924,7 @@ function addMsg(text,type){
   const bubble=document.createElement('div');
   bubble.className='msg-bubble';
   bubble.textContent=text;
-  div.appendChild(name);
-  div.appendChild(bubble);
-  wrap.appendChild(div);
+  div.appendChild(name);div.appendChild(bubble);wrap.appendChild(div);
   wrap.scrollTop=wrap.scrollHeight;
 }
 
@@ -691,7 +940,6 @@ function showTyping(){
 }
 
 function removeTyping(){document.getElementById('typing')?.remove()}
-
 function setDisabled(v){
   document.getElementById('sendBtn').disabled=v;
   document.getElementById('chatInput').disabled=v;
@@ -701,22 +949,15 @@ function processMsg(txt){
   setDisabled(true);showTyping();
   const p=norm(txt);
   const delay=400+Math.random()*300;
-
   setTimeout(()=>{
     removeTyping();
     let resp=null;
-
-    // gabarito
     if(['gabarito','solucao','solução'].some(x=>p.includes(x))){
       if(estado.questao){
         const q=estado.questao;
         resp=`✅ GABARITO\n\n${q.q}\n\n${q.res}\n\nResposta: ${fmt(q.r)}`;
-      }else{
-        resp="Não há questão aberta. Digite 'nova questão'!";
-      }
+      }else{resp="Não há questão aberta. Digite 'nova questão'!";}
     }
-
-    // resposta numérica para questão aberta
     else if(estado.questao&&/\d/.test(txt)){
       const nums=txt.match(/\d+/g)?.map(Number)||[];
       if(nums.length){
@@ -724,31 +965,21 @@ function processMsg(txt){
         if(ult===estado.questao.r){
           resp=`🎉 CORRETO! Parabéns!\n\nResposta: ${fmt(estado.questao.r)}\n\n${estado.questao.res}\n\nDigite 'nova questão' para continuar!`;
           estado.questao=null;
-        }else{
-          resp=`❌ Não foi dessa vez. Você respondeu ${fmt(ult)}.\nDica: pense se a ordem importa ou não.\n(Digite 'gabarito' para ver a resolução)`;
-        }
+        }else{resp=`❌ Não foi dessa vez. Você respondeu ${fmt(ult)}.\nDica: pense se a ordem importa ou não.\n(Digite 'gabarito' para ver a resolução)`;}
       }
     }
-
-    // nova questão
     else if(['nova questao','nova questão','questao','questão','exercicio','exercício','treinar','praticar','desafio'].some(x=>p.includes(x))){
       const q=QUESTOES[Math.floor(Math.random()*QUESTOES.length)];
       estado.questao=q;
       resp=`📝 QUESTÃO\n\n${q.q}\n\nQual é a sua resposta? (ou 'gabarito' para a solução)`;
     }
-
-    // vídeos
     else if(['video','videoaula','assistir','youtube'].some(x=>p.includes(x))){
       openModal();
       resp='🎬 Abrindo as videoaulas!\nClique nas thumbnails para abrir no YouTube.';
     }
-
-    // ajuda
     else if(['ajuda','help','comandos'].some(x=>p.includes(x))){
-      resp='📖 COMANDOS\n\nTÓPICOS: Explique PFC / Arranjo / Combinação / Permutação\n\nCÁLCULO:\n  A(10,3)  C(6,2)  P(5)\n  AR(10,3)  CR(6,2)  8!\n  Anagramas de BANANA\n  Diagonais de polígono de 8 lados\n\nPRÁTICA: nova questão · gabarito\n\nVÍDEOS: clique em "🎬 Videoaulas" no topo';
+      resp='📖 COMANDOS\n\nTÓPICOS: Explique PFC / Arranjo / Combinação / Permutação\n\nCÁLCULO:\n  A(10,3)  C(6,2)  P(5)\n  AR(10,3)  CR(6,2)  8!\n  Anagramas de BANANA\n  Diagonais de polígono de 8 lados\n\nPRÁTICA: nova questão · gabarito\n\nVÍDEOS: aba "Vídeos" no menu inferior';
     }
-
-    // mais exemplos
     else if(p.includes('mais')&&p.includes('exempl')){
       const alvo=Object.entries(TOPICOS).find(([,d])=>d.sins.some(s=>p.includes(norm(s))))?.[0]||estado.tema;
       if(alvo){
@@ -756,24 +987,13 @@ function processMsg(txt){
         const d=TOPICOS[alvo];
         const exs=d.exemplos.map(([nm,desc])=>`📌 ${nm}:\n   ${desc}`).join('\n\n');
         resp=`📚 ${d.titulo} — Exemplos\n\n${exs}`;
-      }else{
-        resp="De qual tópico? Ex: 'mais exemplos de combinação'";
-      }
+      }else{resp="De qual tópico? Ex: 'mais exemplos de combinação'";}
     }
-
-    // base de conhecimento local
     else{
       resp=localResp(txt);
-      if(resp){
-        const match=Object.entries(TOPICOS).find(([,d])=>d.sins.some(s=>p.includes(norm(s))));
-        if(match)estado.tema=match[0];
-      }
+      if(resp){const match=Object.entries(TOPICOS).find(([,d])=>d.sins.some(s=>p.includes(norm(s))));if(match)estado.tema=match[0];}
     }
-
-    if(!resp){
-      resp='Hmm, não entendi bem. 🤔\n\nTente reformular. Exemplos:\n  • "Explique combinação"\n  • "A(10,3)" / "C(6,2)" / "P(5)"\n  • "Anagramas de ROMA"\n  • "Nova questão"\n  • "Videoaulas"\n\nOu clique em "Ajuda" no menu lateral.';
-    }
-
+    if(!resp)resp='Hmm, não entendi bem. 🤔\n\nTente reformular. Exemplos:\n  • "Explique combinação"\n  • "A(10,3)" / "C(6,2)" / "P(5)"\n  • "Anagramas de ROMA"\n  • "Nova questão"\n  • "Videoaulas"\n\nOu use as abas no menu.';
     addMsg(resp,'bot');
     setDisabled(false);
     document.getElementById('chatInput').focus();
@@ -781,6 +1001,7 @@ function processMsg(txt){
 }
 
 function send(txt){
+  closeDrawer();
   document.getElementById('chatInput').value=txt;
   sendMsg();
 }
@@ -800,33 +1021,13 @@ function clearChat(){
   boasVindas();
 }
 
-function boasVindas(){
-  addMsg(
-    'Olá! Sou o ÁlgebraBot — especialista em Análise Combinatória.\n\n' +
-    'Posso:\n' +
-    '  • Explicar PFC, Arranjo, Combinação, Permutação (e variações)\n' +
-    '  • Resolver questões em linguagem natural\n' +
-    '  • Gerar questões para praticar\n' +
-    '  • Explicar a diferença entre os conceitos\n\n' +
-    '🎬 Clique em "Videoaulas" (canto superior direito)\n' +
-    '   para assistir aos 5 vídeos no YouTube!\n\n' +
-    'Exemplos:\n' +
-    '  → "Quantos anagramas tem BANANA?"\n' +
-    '  → "A(10,3)" / "C(6,2)" / "P(5)"\n' +
-    '  → "Diagonais de polígono de 8 lados"\n' +
-    '  → "Nova questão"',
-    'bot'
-  );
-}
-
-// ─── CALCULATOR ───────────────────────────────────────────────────────────────
+// ── CALCULADORA (desktop) ─────────────────────────────────
 function toggleCalc(){
   const op=document.getElementById('calcOp').value;
   const needsP=!['Permutação','Fatorial'].includes(op);
   const pInput=document.getElementById('calcP');
   const pField=document.getElementById('pField');
-  pInput.disabled=!needsP;
-  pField.style.opacity=needsP?'1':'0.3';
+  pInput.disabled=!needsP;pField.style.opacity=needsP?'1':'0.3';
   document.getElementById('calcRes').textContent='';
 }
 
@@ -835,9 +1036,30 @@ function runCalc(){
   const nv=document.getElementById('calcN').value.trim();
   const pv=document.getElementById('calcP').value.trim();
   const res=document.getElementById('calcRes');
+  _runCalcCore(op,nv,pv,res);
+}
+
+// ── CALCULADORA (mobile) ──────────────────────────────────
+function toggleCalcM(){
+  const op=document.getElementById('calcOpM').value;
+  const needsP=!['Permutação','Fatorial'].includes(op);
+  const pInput=document.getElementById('calcPM');
+  const pField=document.getElementById('pFieldM');
+  pInput.disabled=!needsP;pField.style.opacity=needsP?'1':'0.3';
+  document.getElementById('calcResM').textContent='';
+}
+
+function runCalcM(){
+  const op=document.getElementById('calcOpM').value;
+  const nv=document.getElementById('calcNM').value.trim();
+  const pv=document.getElementById('calcPM').value.trim();
+  const res=document.getElementById('calcResM');
+  _runCalcCore(op,nv,pv,res);
+}
+
+function _runCalcCore(op,nv,pv,res){
   try{
-    const n=parseInt(nv);
-    const p=parseInt(pv)||0;
+    const n=parseInt(nv);const p=parseInt(pv)||0;
     if(isNaN(n)){res.textContent='Informe n!';res.style.color='var(--red)';return;}
     res.style.color='var(--acc)';
     switch(op){
@@ -855,7 +1077,26 @@ function runCalc(){
   }catch{res.textContent='Valor inválido!';res.style.color='var(--red)';}
 }
 
-// ─── INIT ─────────────────────────────────────────────────────────────────────
+// ── BOOT ──────────────────────────────────────────────────
+function boasVindas(){
+  addMsg(
+    'Olá! Sou o ÁlgebraBot — especialista em Análise Combinatória.\n\n'+
+    'Posso:\n'+
+    '  • Explicar PFC, Arranjo, Combinação, Permutação (e variações)\n'+
+    '  • Resolver questões em linguagem natural\n'+
+    '  • Gerar questões para praticar\n'+
+    '  • Explicar a diferença entre os conceitos\n\n'+
+    '📱 No celular: use as abas no menu inferior!\n'+
+    '🎬 Clique em "Videoaulas" para os 5 vídeos no YouTube!\n\n'+
+    'Exemplos:\n'+
+    '  → "Quantos anagramas tem BANANA?"\n'+
+    '  → "A(10,3)" / "C(6,2)" / "P(5)"\n'+
+    '  → "Diagonais de polígono de 8 lados"\n'+
+    '  → "Nova questão"',
+    'bot'
+  );
+}
+
 boasVindas();
 document.getElementById('chatInput').focus();
 </script>
